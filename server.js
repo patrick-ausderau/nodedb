@@ -8,6 +8,8 @@ const Schema = mongoose.Schema;
 const express = require('express');
 const app = express();
 
+app.enable('trust proxy');
+
 const demoSchema = new Schema({
   test: String,
   more: Number
