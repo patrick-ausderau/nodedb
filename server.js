@@ -43,21 +43,11 @@ bcrypt.hash(password, saltRound, (err, hash) => {
 
 passport.use(new LocalStrategy(
   (username, password, done) => {
-    if (username !== process.env.username){
-      //wait random between 0.5 to 1 sec
-      setTimeout(() => {
-        done(null, false, {message: 'Incorrect credentials.'});
-        return;
-      }, Math.random()*1000);
+    if (username !== process.env.username || !bcrypt.compareSync(password, process.env.password)) {
+      done(null, false, {message: 'Incorrect credentials.'});
+      return;
     }
-    bcrypt.compare(password, process.env.password, (err, res) => {
-      // res == true (hopefully)
-      if(!res) {
-        done(null, false, {message: 'Incorrect credentials.'});
-        return;
-      }
-      return done(null, {user: username}); // returned object usally contains something to identify the user
-    });
+    return done(null, {user: username}); // returned object usally contains something to identify the user
   }
 ));
 app.use(passport.initialize());
