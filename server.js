@@ -5,6 +5,16 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const bcrypt = require('bcrypt');
+const saltRound = 12; //okayish in 2019
+const myPwd = 'Secret123;)';
+
+bcrypt.hash(myPwd, saltRound, (err, hash) => {
+  // Store hash in the database
+  console.log(hash);
+});
+  
+
 const express = require('express');
 const app = express();
 
