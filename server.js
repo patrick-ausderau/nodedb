@@ -51,9 +51,10 @@ passport.deserializeUser((user, done) => {
 app.use(session({
   secret: 'some s3cr3t value',
   resave: true,
-  saveUninitialized: true,
+  saveUninitialized: true/*,
   cookie: { secure: true, // only over https
     maxAge: 2 * 60 * 60 * 1000} // 2 hours
+    */
 }));
 
 /* to use when user create password (or modify existing password)
