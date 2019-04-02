@@ -8,10 +8,10 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const saltRound = 12; //okayish in 2019
 
-bcrypt.hash(myPwd, saltRound, (err, hash) => {
+/*bcrypt.hash(myPwd, saltRound, (err, hash) => {
   // Store hash in the database
 });
-  
+  */
 
 const express = require('express');
 const app = express();
