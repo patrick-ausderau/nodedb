@@ -32,6 +32,24 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
 });
 
 const bcrypt = require('bcrypt');
+const session = require('express-session');
+
+// data put in passport cookies needs to be serialized
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+app.use(session({
+  secret: 'some s3cr3t value',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { secure: true, // only over https
+    maxAge: 2 * 60 * 60 * 1000} // 2 hours
+}));
 
 /* to use when user create password (or modify existing password)
 const saltRound = 12; //okayish in 2019
@@ -51,6 +69,7 @@ passport.use(new LocalStrategy(
   }
 ));
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.use ((req, res, next) => {
   if (req.secure) {
@@ -74,10 +93,13 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  Demo.create({ test: 'More data', more: 7 }).then(post => {
+  if(req.user !== undefined)
+    return res.send(`Hello ${req.user.username}!`);
+  res.send('Hello Secure World!');
+  /*Demo.create({ test: 'More data', more: 7 }).then(post => {
     console.log(post.id);
     res.send('Created dummy data? ' + post.id);
-  }); 
+  });*/ 
 });
 
 app.get('/all', (req, res) => {
