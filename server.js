@@ -70,7 +70,7 @@ passport.use(new LocalStrategy(
       done(null, false, {message: 'Incorrect credentials.'});
       return;
     }
-    return done(null, {user: username}); // returned object usally contains something to identify the user
+    return done(null, {username: username}); // returned object usally contains something to identify the user
   }
 ));
 app.use(passport.initialize());
@@ -99,7 +99,7 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  console.log(req.user);
+  //console.log(req.user);
   if(req.user !== undefined)
     return res.send(`Hello ${req.user.username}!`);
   res.send('Hello Secure World!');
