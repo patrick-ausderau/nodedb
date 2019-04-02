@@ -7,11 +7,9 @@ const Schema = mongoose.Schema;
 
 const bcrypt = require('bcrypt');
 const saltRound = 12; //okayish in 2019
-const myPwd = 'Secret123;)';
 
 bcrypt.hash(myPwd, saltRound, (err, hash) => {
   // Store hash in the database
-  console.log(hash);
 });
   
 
@@ -43,7 +41,8 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
 
 passport.use(new LocalStrategy(
   (username, password, done) => {
-    if (username !== process.env.username || password !== process.env.password) {
+    if (username !== process.env.username || !bcrypt.compareSync(password, process.env.password)) {
+      console.log("Never log that!!!!! " + username + " " + password);
       done(null, false, {message: 'Incorrect credentials.'});
       return;
     }
