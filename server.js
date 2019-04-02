@@ -88,7 +88,7 @@ app.use ((req, res, next) => {
 
 app.post('/login', 
   passport.authenticate('local', { 
-    successRedirect: '/all', 
+    successRedirect: '/', 
     failureRedirect: '/test', 
     session: false })
 );
@@ -98,6 +98,7 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/', (req, res) => {
+  console.log(req.user);
   if(req.user !== undefined)
     return res.send(`Hello ${req.user.username}!`);
   res.send('Hello Secure World!');
