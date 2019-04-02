@@ -5,14 +5,6 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const bcrypt = require('bcrypt');
-const saltRound = 12; //okayish in 2019
-
-/*bcrypt.hash(myPwd, saltRound, (err, hash) => {
-  // Store hash in the database
-});
-  */
-
 const express = require('express');
 const app = express();
 
@@ -39,14 +31,33 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
   console.log('Connection to db failed: ' + err);
 });
 
+const bcrypt = require('bcrypt');
+
+/* to use when user create password (or modify existing password)
+const saltRound = 12; //okayish in 2019
+bcrypt.hash(password, saltRound, (err, hash) => {
+  // Store hash in the database
+  console.log(hash);
+});
+  */
+
 passport.use(new LocalStrategy(
   (username, password, done) => {
-    if (username !== process.env.username || !bcrypt.compareSync(password, process.env.password)) {
-      console.log("Never log that!!!!! " + username + " " + password);
-      done(null, false, {message: 'Incorrect credentials.'});
-      return;
+    if (username !== process.env.username){
+      //wait random between 0.5 to 1 sec
+      setTimeout(() => {
+        done(null, false, {message: 'Incorrect credentials.'});
+        return;
+      }, Math.random()*1000);
     }
-    return done(null, {user: username}); // returned object usally contains something to identify the user
+    bcrypt.compare(password, process.env.password, (err, res) => {
+      // res == true (hopefully)
+      if(!res) {
+        done(null, false, {message: 'Incorrect credentials.'});
+        return;
+      }
+      return done(null, {user: username}); // returned object usally contains something to identify the user
+    });
   }
 ));
 app.use(passport.initialize());
