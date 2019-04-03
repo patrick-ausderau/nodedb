@@ -9,6 +9,9 @@ const express = require('express');
 const app = express();
 app.use(express.static('public'));
 
+const helmet = require('helmet');
+app.use(helmet());
+
 app.enable('trust proxy');
 
 const bodyParser = require('body-parser');
