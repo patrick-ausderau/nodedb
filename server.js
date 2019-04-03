@@ -12,6 +12,8 @@ app.use(express.static('public'));
 const helmet = require('helmet');
 app.use(helmet());
 
+const MemcachedStore = require("connect-memcached")(session);
+
 app.enable('trust proxy');
 
 const bodyParser = require('body-parser');
@@ -56,7 +58,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: { secure: true, // only over https
-    maxAge: 2 * 60 * 60 * 1000} // 2 hours
+    maxAge: 2 * 60 * 60 * 1000}, // 2 hours
+  store: new MemcachedStore({
+          hosts: ["127.0.0.1:11211"],
+          secret: "123, easy as ABC. ABC, easy as 123" // Optionally use transparent encryption for memcache session data
+        })
 }));
 
 /* to use when user create password (or modify existing password)
