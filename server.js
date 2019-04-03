@@ -12,8 +12,6 @@ app.use(express.static('public'));
 const helmet = require('helmet');
 app.use(helmet());
 
-const MemcachedStore = require("connect-memcached")(session);
-
 app.enable('trust proxy');
 
 const bodyParser = require('body-parser');
@@ -39,6 +37,8 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
 
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+
+const MemcachedStore = require("connect-memcached")(session);
 
 // data put in passport cookies needs to be serialized
 passport.serializeUser((user, done) => {
