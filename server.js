@@ -54,14 +54,14 @@ passport.deserializeUser((user, done) => {
 });
 
 app.use(session({
-  secret: 'some s3cr3t value',
+  secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
   cookie: { secure: true, // only over https
     maxAge: 2 * 60 * 60 * 1000}, // 2 hours
   store: new MemcachedStore({
-          hosts: ["127.0.0.1:11211"],
-          secret: "123, easy as ABC. ABC, easy as 123" // Optionally use transparent encryption for memcache session data
+          hosts: [process.env.MEM_HOST],
+          secret: process.env.MEM_SECRET // Optionally use transparent encryption for memcache session data
         })
 }));
 
